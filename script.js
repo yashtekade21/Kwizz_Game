@@ -1,55 +1,23 @@
 const questions = [
-    ["The International Literacy Day is observed on ",
-        "Sep 8", "Nov 28", "May 2", "Sep 22", 1],
-
-    ["The language of Lakshadweep, a Union Territory of India, is ",
-        "Hindi", "Marathi", "Malayalam", "Telugu", 3],
-
-    ["Which day is observed as the World Standards Day? ",
-        "Jun 8", "Aug 2", "Oct 14", "Nov 15", 3],
-
-    ["Bahubali festival is related to ", "Hinduism",
-        "Islam", "Buddhism", "Jainism", 4],
-
-    ["Who is the author of the epic 'Meghdoot'? ",
-        "Vishakadatta", "Valmiki", "Banabhatta", "Kalidas", 4],
-
-    ["Van Mahotsav was started by ", "Maharshi Karve",
-        "Bal Gangadhar Tilak", "K.M. Munshi", "Sanjay Gandhi", 3],
-
-    ["The Krithi system was perfected and Carnatic music was given by ",
-        "Arunagirinathan", "Purandaradasa", "Shyama Shastri", "Swati Tirunal", 4],
-
-    ["Writers Building is the headquarters of ", "The Times of India Group",
-        "All India Writers Association", "West Bengal Government", "Press Trust of India", 4],
-
-    ["The Konark Temple is dedicated to ",
-        "Vishnu", "Shiva", "Krishna", "Sun-God", 4],
-
-    ["The 227-year-old 'Nawab Saheb Ki Haveli' is located at ",
-        "Hyderabad", "Jaipur", "New Delhi", "Agra", 2],
-
-    ["Which of the following Academy is responsible for fostering the development of dance, drama, and music in India? ",
-        "Lalit Kala Academy", "Sahitya Academy", "National School of Drama", "Sangeet Academy", 4],
-
-    ["In which of the following countries has India not organised 'India Festival'? ",
-        "Russia", "Japan", "France", "West Germany", 4],
-
-    ["The Indian National Calendar is based on ",
-        "Christian era", "Saka era", "Vikram era", "Hiji era", 2],
-
-    ["The abbreviation 'fob' stands for ", "Free on Board",
-        "Free of Bargain", "Fellow of Britain", "None of these", 1],
-
-    ["Which party was founded by Sampat Pal Devi to stop violence against women in Bundelkhand?",
-        " Laxmibai Sena", "Gulabi Gang", "Nari Mukti Vahini", "Mahila Morcha", 2],
-
-    ["Which British Army unit was given the motto 'Primus in Indis' because it was the first to serve in India? ",
-        "41st (Welsh) Regiment of Foot", "1st Coldstream Guards", "5th Light Infantry", "39th Regiment of Foot", 4],
+    ["The International Literacy Day is observed on ", "Sep 8", "Nov 28", "May 2", "Sep 22", 1],
+    ["The language of Lakshadweep, a Union Territory of India, is ", "Hindi", "Marathi", "Malayalam", "Telugu", 3],
+    ["Which day is observed as the World Standards Day? ", "Jun 8", "Aug 2", "Oct 14", "Nov 15", 3],
+    ["Bahubali festival is related to ", "Hinduism", "Islam", "Buddhism", "Jainism", 4],
+    ["Who is the author of the epic 'Meghdoot'? ", "Vishakadatta", "Valmiki", "Banabhatta", "Kalidas", 4],
+    ["Van Mahotsav was started by ", "Maharshi Karve", "Bal Gangadhar Tilak", "K.M. Munshi", "Sanjay Gandhi", 3],
+    ["The Krithi system was perfected and Carnatic music was given by ", "Arunagirinathan", "Purandaradasa", "Shyama Shastri", "Swati Tirunal", 4],
+    ["Writers Building is the headquarters of ", "The Times of India Group", "All India Writers Association", "West Bengal Government", "Press Trust of India", 4],
+    ["The Konark Temple is dedicated to ", "Vishnu", "Shiva", "Krishna", "Sun-God", 4],
+    ["The 227-year-old 'Nawab Saheb Ki Haveli' is located at ", "Hyderabad", "Jaipur", "New Delhi", "Agra", 2],
+    ["Which of the following Academy is responsible for fostering the development of dance, drama, and music in India? ", "Lalit Kala Academy", "Sahitya Academy", "National School of Drama", "Sangeet Academy", 4],
+    ["In which of the following countries has India not organised 'India Festival'? ", "Russia", "Japan", "France", "West Germany", 4],
+    ["The Indian National Calendar is based on ", "Christian era", "Saka era", "Vikram era", "Hiji era", 2],
+    ["The abbreviation 'fob' stands for ", "Free on Board", "Free of Bargain", "Fellow of Britain", "None of these", 1],
+    ["Which party was founded by Sampat Pal Devi to stop violence against women in Bundelkhand?", "Laxmibai Sena", "Gulabi Gang", "Nari Mukti Vahini", "Mahila Morcha", 2],
+    ["Which British Army unit was given the motto 'Primus in Indis' because it was the first to serve in India? ", "41st (Welsh) Regiment of Foot", "1st Coldstream Guards", "5th Light Infantry", "39th Regiment of Foot", 4],
 ];
 
-const prizeMoney = [1000, 2000, 3000, 5000, 10000, 20000, 40000, 80000,
-    160000, 320000, 640000, 1250000, 2500000, 5000000, 10000000];
+const prizeMoney = [1000, 2000, 3000, 5000, 10000, 20000, 40000, 80000, 160000, 320000, 640000, 1250000, 2500000, 5000000, 10000000];
 
 let currentQuestionIndex = 0;
 let totalPrizeWon = 0;
@@ -57,9 +25,11 @@ let lifelinesUsed = { fiftyFifty: false, flipQuestion: false, askAudience: false
 let attemptCount = 1;
 let attemptedQuestions = new Set();
 let prizeIndex = 0;
-
+let timerInterval;
+let maxTime;
 
 function loadQuestion(index) {
+    clearInterval(timerInterval);
     if (attemptedQuestions.size === questions.length) {
         document.getElementById('result').innerText = "Congratulations! You've completed the quiz and won ₹" + totalPrizeWon;
         return;
@@ -72,7 +42,7 @@ function loadQuestion(index) {
         }
     }
 
-    document.getElementById('questionNumber').innerText = `Question ${prizeIndex + 1} for ₹${prizeMoney[prizeIndex]}`; // Use prizeIndex for money
+    document.getElementById('questionNumber').innerText = `Question ${prizeIndex + 1} for ₹${prizeMoney[prizeIndex]}`;
     document.getElementById('questionText').innerText = questions[index][0];
     document.getElementById('option1Text').innerText = questions[index][1];
     document.getElementById('option2Text').innerText = questions[index][2];
@@ -85,8 +55,46 @@ function loadQuestion(index) {
     });
 
     document.getElementById('result').innerText = "";
+    startTimer();
 }
 
+function startTimer() {
+    const progressCircle = document.getElementById('progress');
+    const timeLeftText = document.getElementById('timeLeft');
+
+    if (prizeMoney[prizeIndex] <= 5000) {
+        maxTime = 30; 
+    } else if (prizeMoney[prizeIndex] <= 160000) {
+        maxTime = 60;
+    } else {
+        maxTime = 0; 
+        timeLeftText.innerText = `0s`; 
+        progressCircle.style.strokeDashoffset = '0'; 
+        document.querySelector('.timer-container').style.display = 'block'; 
+        return; 
+    }
+
+    let timeLeft = maxTime;
+    let strokeDashoffset = 0;
+    timeLeftText.innerText = `${timeLeft}s`;
+
+    document.querySelector('.timer-container').style.display = 'block';
+
+    progressCircle.style.strokeDashoffset = '0';
+
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        strokeDashoffset = ((maxTime - timeLeft) / maxTime) * 100;
+        progressCircle.style.strokeDashoffset = strokeDashoffset;
+        timeLeftText.innerText = `${timeLeft}s`;
+
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            alert(`Time is up! You won ₹${totalPrizeWon}.`);
+            window.location.href = `win.html?amount=${totalPrizeWon}`;
+        }
+    }, 1000);
+}
 
 
 function getSelectedOption() {
@@ -112,7 +120,7 @@ function checkAnswer() {
             prizeIndex++;
         }
 
-
+        // Redirect to win page if it's the last question
         if (prizeIndex === questions.length - 1) {
             window.location.href = `win.html?amount=${totalPrizeWon}`;
             return;
@@ -131,6 +139,7 @@ function checkAnswer() {
         }
     }
 }
+
 document.getElementById('submitAnswer').addEventListener('click', checkAnswer);
 
 document.getElementById('fiftyFifty').addEventListener('click', () => {
@@ -178,6 +187,5 @@ function markLifelineUsed(lifeline) {
     button.classList.add('used');
     button.disabled = true;
 }
-
 
 loadQuestion(currentQuestionIndex);
